@@ -6,24 +6,33 @@ require("config/db_config.php");
 
 class ConnectDb extends ConfigDb{
 	private $config;
-	public $connection;
+	private $connection;
+	private $err_db;
 	public function __construct(){
 		parent::__construct();
 		$this->config=parent::get_db_config();
 	}
-	public function connect(){
+	protected function connect():bool{
 		try{
 			$this->connection = new PDO("mysql:host=".$this->config['dbhost'].";dbname=".$this->config['dbname'],$this->config['dbuser'],$this->config['dbpass']);
 			$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		} catch(PDOException $e){
-            return null;	
+			return true;
+		}catch(PDOException $e){
+			$this->err_db=" DB error : Unable to connect !";
 		}
+		return false;
+	}
+	protected function getConnection(){
 		return $this->connection;
 	}
-	public function disconnect(){
-		$this->connection->close();
+	protected function disconnect(){
+        $this->connection->close();
+        $this->connection=null;
 	}
-	function __destruct(){
+	protected function getErrMsg(){
+		return $this->err_db;
+	}
+	public function __destruct(){
 	}
 }
 
