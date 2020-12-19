@@ -9,11 +9,14 @@ class ConfigDb{
             "dbhost"=>"localhost:3306",
             "dbname"=>"sampleDB",
             "dbuser"=>"root",
-            "dbpass"=>"",
+            "dbpass"=>""
         );
     }
-    function get_db_config(){
-        return $this->db_config;
+    protected function get_db_config(){
+        return $this->m_config;
+    }
+    public function __destruct(){
     }
 }
+
 ?>
